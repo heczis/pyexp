@@ -15,7 +15,9 @@ def load_single_tra(tra_name, colsep=';', cols=[], skip_lines=2):
         for line in f:
             if lnum >= skip_lines:
                 columns = line.split(colsep)
-                columns = [float(col.strip()) for col in columns]
+                columns = [
+                    float(col.strip().replace(',','.'))
+                    for col in columns]
                 data.append(columns)
             lnum += 1
     print(tra_name, ' data.shape =', np.array(data).shape)
