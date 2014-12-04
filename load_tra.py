@@ -2,7 +2,7 @@ import numpy as np
 import pylab as plt
 import glob
 import sys
-
+from io import open
 
 def load_single_tra(tra_name, colsep=';', cols=[], skip_lines=2):
     """
@@ -10,7 +10,7 @@ def load_single_tra(tra_name, colsep=';', cols=[], skip_lines=2):
     Returns columns with indices given in cols (in given order) as a list; nonexistent indices raise error.
     """
     data = list()
-    with open(tra_name) as f:
+    with open(tra_name, encoding='latin-1') as f:
         lnum = 0
         for line in f:
             if lnum >= skip_lines:
