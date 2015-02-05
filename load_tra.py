@@ -4,9 +4,10 @@ columns, each row corresponds to one time instant).
 """
 import numpy as np
 import pylab as plt
-import glob
 import sys
 import io
+import os
+import argparse
 
 def load_single_tra(tra_name, colsep=';', cols=[], skip_lines=2):
     """
@@ -38,20 +39,41 @@ def load_tras(tra_names, colsep=';', cols=[], skip_lines=2):
     return out
 
 if __name__ == '__main__':
-    tra_files = sys.argv[1:]
-    data = load_tras(tra_files, colsep=' ', cols=[0,1,2], skip_lines=2)
-    for dat in data:
-        dat['name'] = dat['name'][dat['name'].rfind('/') + 1:dat['name'].rfind('.')]
-
-    # plot force vs. displacement
-    plt.figure()
-    for i, dat in enumerate(data):
-        plt.plot(dat['data'][1,:], dat['data'][0,:],
-                 label = dat['name'])
-    plt.xlabel('displacement [mm]')
-    plt.ylabel('force [N]')
-    plt.legend(loc=0)
-    plt.ylim((0, 40))
-    plt.grid()
+    parser = argparse.ArgumentParser(
+        description = 'Load given TRA files and plot the data.')
+    parser.add_argument(
+        'file', metavar='FILE', nargs='+', type=str,
+        help='TRA file(s) to be read.')
+    parser.add_argument(
+        '--colsep', '-c', metavar='COLSEP', type=str, default=';',
+        help='column separator')
+    parser.add_argument(
+        '--colnum', '-n', metavar='NUM', type=int, default='2',
+        help='number of columns to read')
+    parser.add_argument(
+        '--skiplines', metavar='SKIP', type=int, default='2',
+        help='how many lines to skip at the beginning of each TRA file')
+    args = parser.parse_args()
     
-    plt.show()
+    tra_files = args.file
+    colsep = args.colsep
+    colnum = args.colnum
+    skiplines = args.skiplines
+
+    if tra_files:
+        data = load_tras(tra_files, colsep=colsep,
+                         cols=range(colnum), skip_lines=skiplines)
+        for dat in data:
+            dat['name'] = dat['name'][dat['name'].rfind(os.sep) + 1:dat['name'].rfind('.')]
+
+        # plot force vs. displacement
+        plt.figure()
+        for i, dat in enumerate(data):
+            plt.plot(dat['data'][1,:], dat['data'][0,:],
+                     label = dat['name'])
+        plt.xlabel('displacement [mm]')
+        plt.ylabel('force [N]')
+        plt.legend(loc=0)
+        plt.grid()
+        
+        plt.show()
