@@ -16,15 +16,13 @@ def load_single_tra(tra_name, colsep=';', cols=[], skip_lines=2):
     """
     data = list()
     with io.open(tra_name, encoding='latin-1') as f:
-        lnum = 0
-        for line in f:
+        for lnum, line in enumerate(f):
             if lnum >= skip_lines:
-                columns = line.split(colsep)
+                columns = line.strip().split(colsep)
                 columns = [
                     float(col.strip().replace(',','.'))
-                    for col in columns]
+                    for col in columns if len(col)>0]
                 data.append(columns)
-            lnum += 1
     print(tra_name, ' data.shape =', np.array(data).shape)
     out = {'name':tra_name, 'data':np.array(data).T[cols,:]}
     return out
