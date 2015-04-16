@@ -33,3 +33,22 @@ def split_cycles(data, t_row=0, d_row=1, up_treshold=.1, down_treshold=-.1, star
             current_up = not(current_up)
             start_pt = stop_pt
     return out
+
+def trans_data_linear(x, y, a=2., b=.5, c=.75):
+    """
+    Transformation of data, linear in both coordinates.
+    Can take the function's slope (at origin) into account.
+    X = a * x
+    Y = (c - (c-b)/a * x) * y
+    """
+    return (
+        a * x,
+        (c - (c-b)/a * x) * y)
+
+def trans_data_power(x, y, ky=.5, m=2.):
+    """
+    Transformation if data, linear in y, power-law in x.
+    """
+    return (
+        (x+1)**m-1,
+        ky*y)
