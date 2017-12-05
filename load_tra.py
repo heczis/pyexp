@@ -6,6 +6,7 @@ import numpy as np
 import pylab as plt
 import os
 import argparse
+import codecs
 
 def load_single_tra(tra_name, colsep=';', cols=None, skip_lines=2):
     """
@@ -16,7 +17,7 @@ def load_single_tra(tra_name, colsep=';', cols=None, skip_lines=2):
     """
     data = []
     if cols is not None:
-        with open(tra_name, 'r') as f:
+        with codecs.open(tra_name, 'r', encoding='utf-8', errors='ignore') as f:
             for lnum, line in enumerate(f):
                 if lnum >= skip_lines:
                     columns = line.strip().split(colsep)
