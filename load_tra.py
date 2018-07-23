@@ -24,7 +24,8 @@ def load_single_tra(tra_name, colsep=';', cols=None, skip_lines=2):
                     columns = [
                         float(col.strip().replace(',', '.'))
                         for col in columns if len(col) > 0]
-                    data.append(columns)
+                    if len(columns) >= max(cols):
+                        data.append(columns)
             print(tra_name, ' data.shape =', np.array(data).shape)
     out = {'name':tra_name, 'data':np.array(data).T[cols, :]}
     return out
